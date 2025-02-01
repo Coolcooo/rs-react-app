@@ -3,24 +3,43 @@ import SearchBar from '../SearchBar/SearchBar.tsx';
 import ResultTable from '../ResultTable/ResultTable.tsx';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary.tsx';
 import Button from '../Button/Button.tsx';
+import ErrorDescription from '../ErrorDescription/ErrorDescription.tsx';
 
 export type People = {
   name: string;
-  age: number;
-  height: number;
+  birth_year: string;
+  height: string;
+  url: string;
 };
-type ApiResponseResult = Promise<People[] | number | null>;
+type ApiResponseResult = Promise<People[] | string>;
 const isPeopleObject = (e: unknown): e is People => {
   return !!(
     e &&
     typeof e === 'object' &&
     'name' in e &&
-    'age' in e &&
+    'birth_year' in e &&
     'height' in e &&
+    'url' in e &&
     typeof e.name === 'string' &&
-    typeof e.age === 'number' &&
-    typeof e.height === 'number'
+    typeof e.birth_year === 'string' &&
+    typeof e.url === 'string' &&
+    typeof e.height === 'string'
   );
+};
+const getPeoplesFromJson = (results: unknown[]): People[] => {
+  const peoples: People[] = [];
+  for (let i = 0; i < results.length; i += 1) {
+    const resultItem = results[i];
+    if (isPeopleObject(resultItem)) {
+      peoples.push({
+        birth_year: resultItem.birth_year,
+        height: resultItem.height,
+        name: resultItem.name,
+        url: resultItem.url,
+      });
+    }
+  }
+  return peoples;
 };
 const getApiPeoples = async (searchQuery: string): ApiResponseResult => {
   const processSearchQuery = getProcessSearchQuery(searchQuery);
@@ -34,26 +53,15 @@ const getApiPeoples = async (searchQuery: string): ApiResponseResult => {
     const response = await fetch(apiLink);
     if (response.ok) {
       const json: object = await response.json();
-      const peoples: People[] = [];
       if ('results' in json && Array.isArray(json.results)) {
-        const results = json.results;
-        for (let i = 0; i < results.length; i += 1) {
-          const resultItem = results[i];
-          if (isPeopleObject(resultItem)) {
-            peoples.push({
-              age: resultItem.age,
-              height: resultItem.height,
-              name: resultItem.name,
-            });
-          }
-        }
+        return getPeoplesFromJson(json.results);
       }
-      return peoples;
+      return [];
     } else {
-      return response.status;
+      return `Status code of response: ${response.status}`;
     }
   } catch {
-    return null;
+    return 'Something went wrong';
   }
 };
 
@@ -63,15 +71,14 @@ const getProcessSearchQuery = (searchQuery: string): string => {
 const saveSearchQuery = (searchQuery: string): void => {
   localStorage.setItem('searchQuery', searchQuery);
 };
-const throwError = () => {
-  throw new Error('something went wrong');
-};
 
 type AppProps = object;
 type AppState = {
   searchQuery: string;
   peoples: People[];
   isLoading: boolean;
+  isThrowError: boolean;
+  apiError: string | null;
 };
 class App extends Component<AppProps, AppState> {
   constructor(props: AppProps) {
@@ -80,10 +87,12 @@ class App extends Component<AppProps, AppState> {
       peoples: [],
       searchQuery: localStorage.getItem('searchQuery') || '',
       isLoading: false,
+      isThrowError: false,
+      apiError: null,
     };
   }
   componentDidMount = () => {
-    this.handleSearch();
+    this.handleSearch().then(() => {});
   };
 
   handleInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -92,11 +101,16 @@ class App extends Component<AppProps, AppState> {
   handleSearch = async () => {
     saveSearchQuery(this.state.searchQuery);
     this.setState({ isLoading: true });
-    const peoples = await getApiPeoples(this.state.searchQuery);
+    const apiResponse = await getApiPeoples(this.state.searchQuery);
     this.setState({ isLoading: false });
-    if (Array.isArray(peoples)) {
-      this.setState({ peoples });
+    if (Array.isArray(apiResponse)) {
+      this.setState({ peoples: apiResponse, apiError: null });
+    } else {
+      this.setState({ peoples: [], apiError: apiResponse });
     }
+  };
+  throwError = () => {
+    this.setState({ isThrowError: true });
   };
   render = () => {
     return (
@@ -105,14 +119,21 @@ class App extends Component<AppProps, AppState> {
           disabled={this.state.isLoading}
           onInput={this.handleInput}
           searchQuery={this.state.searchQuery}
+          onSearch={this.handleSearch}
         />
-        <ErrorBoundary>
-          <ResultTable
-            disabled={this.state.isLoading}
-            peoples={this.state.peoples}
-          />
-          <Button onClick={throwError}>Error Button</Button>
-        </ErrorBoundary>
+        {this.state.apiError !== null ? (
+          <ErrorDescription description={this.state.apiError} />
+        ) : (
+          <ErrorBoundary>
+            <ResultTable
+              disabled={this.state.isLoading}
+              peoples={this.state.peoples}
+              headers={['Character name', 'Character characteristics']}
+              isThrowError={this.state.isThrowError}
+            />
+            <Button onClick={this.throwError}>Error Button</Button>
+          </ErrorBoundary>
+        )}
       </>
     );
   };

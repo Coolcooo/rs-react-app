@@ -6,6 +6,7 @@ export type SearchBarProps = {
   disabled: boolean;
   onInput: (e: ChangeEvent<HTMLInputElement>) => void;
   searchQuery: string;
+  onSearch: () => void;
 };
 type SearchBarState = object;
 class SearchBar extends Component<SearchBarProps, SearchBarState> {
@@ -13,7 +14,9 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
     return (
       <>
         <InputField {...this.props} />
-        <Button disabled={this.props.disabled}>Search</Button>
+        <Button onClick={this.props.onSearch} disabled={this.props.disabled}>
+          Search
+        </Button>
       </>
     );
   };
