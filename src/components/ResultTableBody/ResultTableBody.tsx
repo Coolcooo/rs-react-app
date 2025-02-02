@@ -1,6 +1,8 @@
 import { Component, ReactNode } from 'react';
 import ResultRow from '../ResultRow/ResultRow.tsx';
 import { People } from '../App/App.tsx';
+import styles from './ResultTableBody.module.css';
+import Loader from '../Loader/Loader.tsx';
 
 type ResultTableBodyProps = {
   peoples: People[];

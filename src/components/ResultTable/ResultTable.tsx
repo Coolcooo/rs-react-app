@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { People } from '../App/App.tsx';
 import ResultTableHeader from '../ResultTableHeader/ResultTableHeader.tsx';
 import ResultTableBody from '../ResultTableBody/ResultTableBody.tsx';
-import Loader from '../Loader/Loader.tsx';
+import styles from './ResultTable.module.css';
 
 type ResultTableProps = {
   disabled?: boolean;

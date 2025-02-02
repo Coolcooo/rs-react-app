@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import styles from './Button.module.css';
 
 type ButtonProps = {
   disabled?: boolean;
@@ -6,11 +7,26 @@ type ButtonProps = {
   view?: string;
   onClick?: () => void;
 };
-type ButtonState = object;
-class Button extends Component<ButtonProps, ButtonState> {
+const getStyleFromView = (view: string | undefined) => {
+  switch (view) {
+    case 'action':
+      return styles.action;
+    case 'danger':
+      return styles.danger;
+    case 'normal':
+    default:
+      return styles.normal;
+  }
+};
+
+class Button extends Component<ButtonProps, object> {
   render = () => {
     return (
-      <button onClick={this.props.onClick} disabled={this.props.disabled}>
+      <button
+        className={[styles.button, getStyleFromView(this.props.view)].join(' ')}
+        onClick={this.props.onClick}
+        disabled={this.props.disabled}
+      >
         {this.props.children}
       </button>
     );
