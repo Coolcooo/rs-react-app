@@ -62,11 +62,11 @@ class App extends Component<object, AppState> {
           searchQuery={this.state.searchQuery}
           onSearch={this.handleSearch}
         />
-        {this.state.apiError !== null ? (
-          <ErrorDescription description={this.state.apiError} />
-        ) : (
-          <div className={styles.results}>
-            <div>Results</div>
+        <div className={styles.results}>
+          <div>Results</div>
+          {this.state.apiError !== null ? (
+            <ErrorDescription description={this.state.apiError} />
+          ) : (
             <ErrorBoundary>
               <ResultTable
                 disabled={this.state.isLoading}
@@ -78,8 +78,8 @@ class App extends Component<object, AppState> {
                 Error Button
               </Button>
             </ErrorBoundary>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   };
