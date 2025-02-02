@@ -15,14 +15,16 @@ class ResultTable extends Component<ResultTableProps, object> {
     if (this.props.isThrowError) {
       throw new Error('Something went wrong');
     }
-    if (this.props.disabled) {
-      return <Loader />;
-    }
     return (
-      <table>
-        <ResultTableHeader headers={this.props.headers} />
-        <ResultTableBody peoples={this.props.peoples} />
-      </table>
+      <div className={styles['result-table-wrapper']}>
+        <table>
+          <ResultTableHeader headers={this.props.headers} />
+          <ResultTableBody
+            disabled={this.props.disabled}
+            peoples={this.props.peoples}
+          />
+        </table>
+      </div>
     );
   };
 }

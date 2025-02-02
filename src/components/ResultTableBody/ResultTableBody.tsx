@@ -6,6 +6,7 @@ import Loader from '../Loader/Loader.tsx';
 
 type ResultTableBodyProps = {
   peoples: People[];
+  disabled?: boolean;
 };
 class ResultTableBody extends Component<ResultTableBodyProps, object> {
   render = () => {
@@ -13,7 +14,14 @@ class ResultTableBody extends Component<ResultTableBodyProps, object> {
       return <ResultRow people={e} key={e.url}></ResultRow>;
     });
 
-    return <tbody>{peopleItems}</tbody>;
+    return (
+      <div className={styles['table-body']}>
+        {this.props.disabled && <Loader />}
+        <table>
+          <tbody>{peopleItems}</tbody>
+        </table>
+      </div>
+    );
   };
 }
 

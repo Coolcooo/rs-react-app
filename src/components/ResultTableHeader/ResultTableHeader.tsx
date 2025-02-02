@@ -13,9 +13,11 @@ class ResultTableHeader extends Component<ResultTableHeaderProps, object> {
       );
     });
     return (
-      <thead>
-        <tr>{headerItems}</tr>
-      </thead>
+      <table>
+        <thead>
+          <tr>{headerItems}</tr>
+        </thead>
+      </table>
     );
   };
 }
