@@ -15,10 +15,14 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
     return (
       <div className={styles['search-bar']}>
         <InputField {...this.props} />
-        <Button onClick={this.props.onSearch} disabled={this.props.disabled}>
+        <Button
+          view={'action'}
+          onClick={this.props.onSearch}
+          disabled={this.props.disabled}
+        >
           Search
         </Button>
-      </>
+      </div>
     );
   };
 }
