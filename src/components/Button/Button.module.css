@@ -1,21 +1,21 @@
 .button {
-    padding: 5px;
-    border: none;
-    border-radius: 5px;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
 }
 .normal {
-    background-color:gray;
-    color: white;
+  background-color: gray;
+  color: white;
 }
 
 .action {
-    background-color: darkorange;
+  background-color: darkorange;
 }
 .button:hover {
-    box-shadow: inset 0 0 0 1px black;
-    cursor: pointer;
+  box-shadow: inset 0 0 0 1px black;
+  cursor: pointer;
 }
 
 .danger {
-    background-color: red;
+  background-color: red;
 }
