@@ -1,0 +1,7 @@
+.result-table-wrapper {
+    display: inline-block;
+    position: relative;
+}
+.result-table-wrapper table {
+    table-layout: fixed;
+}
