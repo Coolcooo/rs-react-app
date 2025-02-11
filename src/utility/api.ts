@@ -56,6 +56,3 @@ export const getApiPeoples = async (searchQuery: string): ApiResponseResult => {
 const getProcessSearchQuery = (searchQuery: string): string => {
   return encodeURIComponent(searchQuery.trim().toLowerCase());
 };
-export const saveSearchQuery = (searchQuery: string): void => {
-  localStorage.setItem('searchQuery', searchQuery);
-};

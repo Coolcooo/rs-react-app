@@ -1,11 +1,11 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar.tsx';
 import ResultTable from '../ResultTable/ResultTable.tsx';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary.tsx';
 import Button from '../Button/Button.tsx';
 import ErrorDescription from '../ErrorDescription/ErrorDescription.tsx';
 import styles from './App.module.css';
-import { getApiPeoples, saveSearchQuery } from '../../utility/api.ts';
+import { getApiPeoples } from '../../utility/api.ts';
 
 export type People = {
   name: string;
@@ -14,12 +14,28 @@ export type People = {
   url: string;
 };
 
+function useLocalStorage(key, defaultValue) {
+  const [localStorageItem, setLocalStorageItem] = useState(
+    localStorage.getItem(key) || defaultValue
+  );
+  return [
+    localStorageItem,
+    (value) => {
+      setLocalStorageItem(value);
+      localStorage.setItem(key, JSON.stringify(defaultValue));
+    },
+  ];
+}
+
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [peoples, setPeoples] = useState<People[]>([]);
-  const [searchQuery, setSearchQuery] = useState(
-    localStorage.getItem('searchQuery') || ''
+  const [storageSearchQuery, setStorageSearchQuery] = useLocalStorage(
+    'searchQuery',
+    ''
   );
+  const [searchQuery, setSearchQuery] = useState(storageSearchQuery);
+
   const [isThrowError, setIsThrowError] = useState(false);
   const [apiError, setApiError] = useState<null | string>(null);
 
@@ -27,7 +43,7 @@ function App() {
     setSearchQuery(e.target.value);
   };
   const handleSearch = async () => {
-    saveSearchQuery(searchQuery);
+    setStorageSearchQuery(searchQuery);
     setIsLoading(true);
     const apiResponse = await getApiPeoples(searchQuery);
     setIsLoading(false);
@@ -42,6 +58,11 @@ function App() {
   const throwError = () => {
     setIsThrowError(true);
   };
+
+  useEffect(() => {
+    handleSearch().then(() => {});
+  }, []);
+
   return (
     <div className={styles.app}>
       <SearchBar
