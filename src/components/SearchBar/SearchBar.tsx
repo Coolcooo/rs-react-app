@@ -1,4 +1,4 @@
-import { ChangeEvent, Component } from 'react';
+import { ChangeEvent } from 'react';
 import InputField from '../InputField/InputField.tsx';
 import Button from '../Button/Button.tsx';
 import styles from './SearchBar.module.css';
@@ -9,22 +9,25 @@ export type SearchBarProps = {
   searchQuery: string;
   onSearch: () => void;
 };
-type SearchBarState = object;
-class SearchBar extends Component<SearchBarProps, SearchBarState> {
-  render = () => {
-    return (
-      <div className={styles['search-bar']}>
-        <InputField {...this.props} />
-        <Button
-          view={'action'}
-          onClick={this.props.onSearch}
-          disabled={this.props.disabled}
-        >
-          Search
-        </Button>
-      </div>
-    );
-  };
+function SearchBar({
+  disabled,
+  searchQuery,
+  onSearch,
+  onInput,
+}: SearchBarProps) {
+  return (
+    <div className={styles['search-bar']}>
+      <InputField
+        disabled={disabled}
+        searchQuery={searchQuery}
+        onSearch={onSearch}
+        onInput={onInput}
+      />
+      <Button view={'action'} onClick={onSearch} disabled={disabled}>
+        Search
+      </Button>
+    </div>
+  );
 }
 
 export default SearchBar;

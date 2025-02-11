@@ -1,25 +1,21 @@
-import { Component } from 'react';
-
 type ResultTableHeaderProps = {
   headers: string[];
 };
-class ResultTableHeader extends Component<ResultTableHeaderProps, object> {
-  render = () => {
-    const headerItems = this.props.headers.map((e) => {
-      return (
-        <th scope="col" key={e}>
-          {e}
-        </th>
-      );
-    });
+function ResultTableHeader({ headers }: ResultTableHeaderProps) {
+  const headerItems = headers.map((e) => {
     return (
-      <table>
-        <thead>
-          <tr>{headerItems}</tr>
-        </thead>
-      </table>
+      <th scope="col" key={e}>
+        {e}
+      </th>
     );
-  };
+  });
+  return (
+    <table>
+      <thead>
+        <tr>{headerItems}</tr>
+      </thead>
+    </table>
+  );
 }
 
 export default ResultTableHeader;

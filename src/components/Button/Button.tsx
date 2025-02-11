@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import styles from './Button.module.css';
 
 type ButtonProps = {
@@ -19,18 +18,16 @@ const getStyleFromView = (view: string | undefined) => {
   }
 };
 
-class Button extends Component<ButtonProps, object> {
-  render = () => {
-    return (
-      <button
-        className={[styles.button, getStyleFromView(this.props.view)].join(' ')}
-        onClick={this.props.onClick}
-        disabled={this.props.disabled}
-      >
-        {this.props.children}
-      </button>
-    );
-  };
+function Button({ view, onClick, disabled, children }: ButtonProps) {
+  return (
+    <button
+      className={[styles.button, getStyleFromView(view)].join(' ')}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {children}
+    </button>
+  );
 }
 
 export default Button;

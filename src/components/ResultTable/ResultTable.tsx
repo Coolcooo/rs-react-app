@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { People } from '../App/App.tsx';
 import ResultTableHeader from '../ResultTableHeader/ResultTableHeader.tsx';
 import ResultTableBody from '../ResultTableBody/ResultTableBody.tsx';
@@ -10,23 +9,23 @@ type ResultTableProps = {
   headers: string[];
   isThrowError: boolean;
 };
-class ResultTable extends Component<ResultTableProps, object> {
-  render = () => {
-    if (this.props.isThrowError) {
-      throw new Error('Something went wrong');
-    }
-    return (
-      <div className={styles['result-table-wrapper']}>
-        <table>
-          <ResultTableHeader headers={this.props.headers} />
-          <ResultTableBody
-            disabled={this.props.disabled}
-            peoples={this.props.peoples}
-          />
-        </table>
-      </div>
-    );
-  };
+function ResultTable({
+  isThrowError,
+  peoples,
+  headers,
+  disabled,
+}: ResultTableProps) {
+  if (isThrowError) {
+    throw new Error('Something went wrong');
+  }
+  return (
+    <div className={styles['result-table-wrapper']}>
+      <table>
+        <ResultTableHeader headers={headers} />
+        <ResultTableBody disabled={disabled} peoples={peoples} />
+      </table>
+    </div>
+  );
 }
 
 export default ResultTable;
