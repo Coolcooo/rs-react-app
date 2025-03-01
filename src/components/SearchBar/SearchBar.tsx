@@ -20,7 +20,6 @@ function SearchBar({
       <InputField
         disabled={disabled}
         searchQuery={searchQuery}
-        onSearch={onSearch}
         onInput={onInput}
       />
       <Button view={'action'} onClick={onSearch} disabled={disabled}>

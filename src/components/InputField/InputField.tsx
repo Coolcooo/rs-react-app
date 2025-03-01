@@ -1,7 +1,12 @@
-import { SearchBarProps } from '../SearchBar/SearchBar.tsx';
 import styles from './InputField.module.css';
+import { ChangeEvent } from 'react';
 
-function InputField({ disabled, searchQuery, onInput }: SearchBarProps) {
+type InputFieldProps = {
+  disabled?: boolean;
+  searchQuery: string;
+  onInput: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+function InputField({ disabled, searchQuery, onInput }: InputFieldProps) {
   return (
     <input
       className={styles['input-field']}

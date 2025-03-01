@@ -1,11 +1,8 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import SearchBar from '../SearchBar/SearchBar.tsx';
-import ResultTable from '../ResultTable/ResultTable.tsx';
-import ErrorBoundary from '../ErrorBoundary/ErrorBoundary.tsx';
-import Button from '../Button/Button.tsx';
-import ErrorDescription from '../ErrorDescription/ErrorDescription.tsx';
-import styles from './App.module.css';
 import { getApiPeoples } from '../../utility/api.ts';
+import { Routes, Route, useSearchParams } from 'react-router';
+import SearchLayout from '../../layouts/SearchLayout/SearchLayout.tsx';
+import Home from '../../pages/Home/Home.tsx';
 
 export type People = {
   name: string;
@@ -14,7 +11,10 @@ export type People = {
   url: string;
 };
 
-function useLocalStorage(key, defaultValue) {
+function useLocalStorage(
+  key: string,
+  defaultValue: string
+): [string, (value: string) => void] {
   const [localStorageItem, setLocalStorageItem] = useState(
     localStorage.getItem(key) || defaultValue
   );
@@ -38,6 +38,9 @@ function App() {
 
   const [isThrowError, setIsThrowError] = useState(false);
   const [apiError, setApiError] = useState<null | string>(null);
+  const [searchParams] = useSearchParams();
+  const queryPage = searchParams.get('page');
+  const page = queryPage !== null ? parseInt(queryPage, 10) : 1;
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -45,7 +48,7 @@ function App() {
   const handleSearch = async () => {
     setStorageSearchQuery(searchQuery);
     setIsLoading(true);
-    const apiResponse = await getApiPeoples(searchQuery);
+    const apiResponse = await getApiPeoples(searchQuery, page);
     setIsLoading(false);
     if (Array.isArray(apiResponse)) {
       setPeoples(apiResponse);
@@ -64,32 +67,31 @@ function App() {
   }, []);
 
   return (
-    <div className={styles.app}>
-      <SearchBar
-        disabled={isLoading}
-        onInput={handleInput}
-        searchQuery={searchQuery}
-        onSearch={handleSearch}
-      />
-      <div className={styles.results}>
-        <div>Results</div>
-        {apiError !== null ? (
-          <ErrorDescription description={apiError} />
-        ) : (
-          <ErrorBoundary>
-            <ResultTable
+    <Routes>
+      <Route
+        element={
+          <SearchLayout
+            disabled={isLoading}
+            onSearch={handleSearch}
+            onInput={handleInput}
+            searchQuery={searchQuery}
+          />
+        }
+      >
+        <Route
+          index
+          element={
+            <Home
               disabled={isLoading}
               peoples={peoples}
-              headers={['Character name', 'Character characteristics']}
               isThrowError={isThrowError}
+              throwError={throwError}
+              apiError={apiError}
             />
-            <Button view={'danger'} onClick={throwError}>
-              Error Button
-            </Button>
-          </ErrorBoundary>
-        )}
-      </div>
-    </div>
+          }
+        />
+      </Route>
+    </Routes>
   );
 }
 

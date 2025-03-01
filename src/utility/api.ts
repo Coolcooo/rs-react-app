@@ -30,13 +30,16 @@ const getPeoplesFromJson = (results: unknown[]): People[] => {
   }
   return peoples;
 };
-export const getApiPeoples = async (searchQuery: string): ApiResponseResult => {
+export const getApiPeoples = async (
+  searchQuery: string,
+  page: number
+): ApiResponseResult => {
   const processSearchQuery = getProcessSearchQuery(searchQuery);
   let apiLink;
   if (processSearchQuery.length === 0) {
-    apiLink = `https://swapi.dev/api/people/`;
+    apiLink = `https://swapi.dev/api/people/?page=${page}`;
   } else {
-    apiLink = `https://swapi.dev/api/people/?search=${searchQuery}&&page=1`;
+    apiLink = `https://swapi.dev/api/people/?search=${searchQuery}&&page=${page}`;
   }
   try {
     const response = await fetch(apiLink);
