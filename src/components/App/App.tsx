@@ -3,6 +3,7 @@ import { getApiPeoples } from '../../utility/api.ts';
 import { Routes, Route, useSearchParams } from 'react-router';
 import SearchLayout from '../../layouts/SearchLayout/SearchLayout.tsx';
 import Home from '../../pages/Home/Home.tsx';
+import NotFound from "../../pages/NotFound/NotFound";
 
 export type People = {
   name: string;
@@ -91,6 +92,7 @@ function App() {
           }
         />
       </Route>
+      <Route path='*' element={<NotFound/>}/>
     </Routes>
   );
 }

@@ -1,0 +1,27 @@
+.not-found {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+.not-found h1 {
+    font-size: 4em;
+    color: #c1121f;
+    margin: 0;
+}
+
+.not-found p {
+    font-size: 2em;
+    color: rgb(102, 155, 188);
+    margin: 0 0 0.5em 0;
+}
+.link {
+    text-decoration: none;
+    color: rgb(0, 48, 73);
+    background-color: rgb(102, 155, 188);
+    padding: 0.5em;
+    border-radius: 5px;
+}
+

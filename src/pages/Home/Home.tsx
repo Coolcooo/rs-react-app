@@ -4,6 +4,8 @@ import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary.tsx';
 import ResultTable from '../../components/ResultTable/ResultTable.tsx';
 import Button from '../../components/Button/Button.tsx';
 import { People } from '../../components/App/App.tsx';
+import {useSearchParams} from "react-router";
+import Details from "../../components/Details/Details";
 
 type HomeProps = {
   apiError: null | string;
@@ -18,7 +20,12 @@ function Home({
   peoples,
   isThrowError,
   throwError,
+  selectedPeople
 }: HomeProps) {
+    const [searchParams] = useSearchParams();
+    const peopleId = selectedPeople || peoples[0];
+    const isDetails = !!(searchParams.get('details') && selectedPeople);
+
   return (
     <div className={styles.results}>
       <div>Results</div>
@@ -32,6 +39,7 @@ function Home({
             headers={['Character name', 'Character characteristics']}
             isThrowError={isThrowError}
           />
+            {!!peopleId && <Details peopleId={peopleId}/>}
           <Button view={'danger'} onClick={throwError}>
             Error Button
           </Button>

@@ -56,6 +56,32 @@ export const getApiPeoples = async (
     return 'Something went wrong';
   }
 };
+
+export const getApiPeopleFilms = async (peopleInfo) => {
+    const filmUrls = peopleInfo.films;
+    const filmPromises = [];
+    for (let i = 0; i < filmUrls.length; i += 1) {
+        filmPromises.push(fetch(filmUrls[i]));
+    }
+
+    try {
+        const filmInfoResponses = await Promise.all(filmPromises);
+        const filmsInfo = await Promise.all(filmInfoResponses.map((e) => e.json()));
+        return filmsInfo.map((e) => e.title);
+    } catch {
+        return null;
+    }
+};
+
+export const getApiPeopleSpecies = async (peopleInfo) => {
+    const speciesUrl = peopleInfo.species[0];
+    if (!speciesUrl) {
+        throw new Error('No species available');
+    }
+    const response = await fetch(speciesUrl);
+    const speciesInfo = await response.json();
+    return speciesInfo;
+}
 const getProcessSearchQuery = (searchQuery: string): string => {
   return encodeURIComponent(searchQuery.trim().toLowerCase());
 };
